@@ -1,8 +1,12 @@
-# nodejs-tg-bot-api
+# 🤖 nodejs-tg-bot-api
 
 ### Features
  - Dependencies free
  - Some handy services for formatting text and send buttons
+
+## Installation
+
+`npm i nodejs-tg-bot-api`
 
 ## Usage
 

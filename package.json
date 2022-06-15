@@ -5,7 +5,15 @@
     "telegram bot api",
     "telegram bot nodejs"
   ],
-  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api/issues"
+  },
+  "homepage": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api",
+  "version": "0.1.1",
   "description": "Dependency free nodejs tools for using Telegram Bot Api",
   "main": "build/index.js",
   "scripts": {
