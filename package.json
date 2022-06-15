@@ -1,0 +1,37 @@
+{
+  "name": "nodejs-tg-bot-api",
+  "keywords": [
+    "telegram bot",
+    "telegram bot api",
+    "telegram bot nodejs"
+  ],
+  "version": "0.1.0",
+  "description": "Dependency free nodejs tools for using Telegram Bot Api",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "tsnd --respawn --transpile-only src/examples/index.ts",
+    "build": "tsc --declaration --project tsconfig.json",
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix && prettier \"src/**/*.ts\" --write"
+  },
+  "author": "Alexey Zaytsev <alexej3ajtsev@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.43",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.16.0",
+    "husky": "^8.0.1",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2",
+    "ts-node": "^10.8.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  }
+}
