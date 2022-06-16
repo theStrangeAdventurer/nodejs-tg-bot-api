@@ -6,7 +6,9 @@
       "outDir": "build",
       "sourceMap": true,
       "esModuleInterop": true,
+      "typeRoots": []
     },
-  "include": ["src/**/*.ts"],
+  "declarationMap": true,
+  "include": ["src/**/*.ts", "src/@types/*.ts"],
   "exclude": ["node_modules"],
 }

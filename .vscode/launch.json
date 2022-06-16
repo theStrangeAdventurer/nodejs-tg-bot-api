@@ -10,7 +10,7 @@
             "console": "integratedTerminal",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/src/examples/index.ts",
+            "program": "${workspaceFolder}/src/examples/all.ts",
             "preLaunchTask": "npm: build",
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"
