@@ -19,4 +19,3 @@ class Button {
     }
 }
 exports.Button = Button;
-//# sourceMappingURL=button.js.map

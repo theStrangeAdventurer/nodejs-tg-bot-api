@@ -52,4 +52,3 @@ class Md {
     }
 }
 exports.Md = Md;
-//# sourceMappingURL=md.js.map

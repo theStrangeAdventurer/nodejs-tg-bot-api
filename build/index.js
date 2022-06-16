@@ -21,4 +21,3 @@ const services_1 = require("./services");
 Object.defineProperty(exports, "Button", { enumerable: true, get: function () { return services_1.Button; } });
 Object.defineProperty(exports, "Md", { enumerable: true, get: function () { return services_1.Md; } });
 __exportStar(require("./@types/api"), exports);
-//# sourceMappingURL=index.js.map

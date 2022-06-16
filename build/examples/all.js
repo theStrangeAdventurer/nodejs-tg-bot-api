@@ -72,4 +72,3 @@ const UPDATE_TIME_MS = 2000;
     handleUpdates(); // First update on app start
     // setInterval(handleUpdates, UPDATE_TIME_MS); // Every UPDATE_TIME_MS check updates from our bot
 })();
-//# sourceMappingURL=all.js.map

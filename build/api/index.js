@@ -108,4 +108,3 @@ class TelegramApi {
     }
 }
 exports.TelegramApi = TelegramApi;
-//# sourceMappingURL=index.js.map

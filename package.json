@@ -13,12 +13,12 @@
     "url": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api/issues"
   },
   "homepage": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Dependency free nodejs tools for using Telegram Bot Api",
   "main": "build/index.js",
   "scripts": {
     "dev": "tsnd --respawn --transpile-only src/examples/all.ts",
-    "build": "tsc --declaration --project tsconfig.json",
+    "build": "tsc --project tsconfig.json --declaration",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix && prettier \"src/**/*.ts\" --write"
   },
