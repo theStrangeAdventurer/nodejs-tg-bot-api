@@ -24,7 +24,6 @@ class TelegramApi {
             parse_mode: DEFAULT_PARSE_MODE,
             ...data,
         };
-        console.dir({ where: 'before sendMessage', body });
         return this.request('/sendMessage', body);
     }
     getFile(fileId) {
@@ -54,6 +53,10 @@ class TelegramApi {
         const response = await this.getUpdates({ limit: 1, offset: -1 });
         return !((_a = response === null || response === void 0 ? void 0 : response.result) === null || _a === void 0 ? void 0 : _a.length) ? null : response.result[0];
     }
+    // https://core.telegram.org/bots/api#answercallbackquery
+    async answerCallbackQuery(data) {
+        return this.request('/answerCallbackQuery', data);
+    }
     request(path, body = {}, useBasePrefix = true) {
         return new Promise((resolve, reject) => {
             const prefix = useBasePrefix ? this.basePrefix : this.filePrefix;
@@ -68,30 +71,25 @@ class TelegramApi {
                 },
             }, (res) => {
                 if (res.statusCode !== 200) {
-                    console.dir({ error: true, url, postData, rawData: body }, { depth: 10 });
                     req.destroy();
-                    reject(new Error(`Error: ${res.statusMessage}, code: ${res.statusCode}`));
+                    return reject(new Error(`Error: ${res.statusMessage}, code: ${res.statusCode}, \n ${url} \n ${JSON.stringify(body, null, 2)}`));
                 }
-                const handleResolve = () => {
+                res
+                    .on('data', (chunk) => {
+                    data.push(chunk);
+                })
+                    .on('end', () => {
                     const stringData = data.join('').toString();
                     try {
                         const resultData = JSON.parse(stringData);
                         resolve(resultData);
                     }
                     catch (error) {
-                        console.dir({ error, stringData });
                         reject(error);
                     }
                     finally {
                         req.destroy();
                     }
-                };
-                res
-                    .on('data', (chunk) => {
-                    data.push(chunk);
-                })
-                    .on('end', () => {
-                    handleResolve();
                 });
             });
             const handleReject = (error) => {

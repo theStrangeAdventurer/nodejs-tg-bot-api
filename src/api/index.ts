@@ -86,14 +86,23 @@ export class TelegramApi {
        * Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
        * @param {force_reply}
        */
-      force_reply: true;
+      force_reply: boolean;
+
+      /**
+       * Requests clients to remove the custom keyboard
+       * user will not be able to summon this keyboard,
+       * if you want to hide the keyboard from sight but keep it accessible,
+       * use one_time_keyboard in ReplyKeyboardMarkup
+       * 
+       * @param {remove_keyboard}
+       */
+      remove_keyboard: boolean;
     }>;
   }) {
     const body = {
       parse_mode: DEFAULT_PARSE_MODE,
       ...data,
     };
-    console.dir({ where: 'before sendMessage', body });
     return this.request('/sendMessage', body);
   }
 
@@ -128,6 +137,17 @@ export class TelegramApi {
     return !response?.result?.length ? null : response.result[0];
   }
 
+  // https://core.telegram.org/bots/api#answercallbackquery
+  public async answerCallbackQuery(data: {
+    callback_query_id: string;
+    text?: string;
+    show_alert?: boolean;
+    url?: string;
+    cache_time?: number;
+  }) {
+    return this.request('/answerCallbackQuery', data)
+  }
+
   private request<T = AnyObject>(path: string, body = {} as AnyObject, useBasePrefix = true): Promise<T> {
     return new Promise((resolve, reject) => {
       const prefix = useBasePrefix ? this.basePrefix : this.filePrefix;
@@ -146,28 +166,24 @@ export class TelegramApi {
         },
         (res) => {
           if (res.statusCode !== 200) {
-            console.dir({ error: true, url, postData, rawData: body }, { depth: 10 });
             req.destroy();
-            reject(new Error(`Error: ${res.statusMessage}, code: ${res.statusCode}`));
+            return reject(new Error(`Error: ${res.statusMessage}, code: ${res.statusCode}, \n ${url} \n ${JSON.stringify(body, null, 2)}`));
           }
-          const handleResolve = () => {
-            const stringData = data.join('').toString();
-            try {
-              const resultData = JSON.parse(stringData);
-              resolve(resultData);
-            } catch (error) {
-              console.dir({ error, stringData });
-              reject(error);
-            } finally {
-              req.destroy();
-            }
-          };
+
           res
             .on('data', (chunk: Buffer) => {
               data.push(chunk);
             })
             .on('end', () => {
-              handleResolve();
+              const stringData = data.join('').toString();
+              try {
+                const resultData = JSON.parse(stringData);
+                resolve(resultData);
+              } catch (error) {
+                reject(error);
+              } finally {
+                req.destroy();
+              }
             });
         },
       );

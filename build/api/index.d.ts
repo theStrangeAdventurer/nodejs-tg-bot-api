@@ -72,7 +72,16 @@ export declare class TelegramApi {
              * Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
              * @param {force_reply}
              */
-            force_reply: true;
+            force_reply: boolean;
+            /**
+             * Requests clients to remove the custom keyboard
+             * user will not be able to summon this keyboard,
+             * if you want to hide the keyboard from sight but keep it accessible,
+             * use one_time_keyboard in ReplyKeyboardMarkup
+             *
+             * @param {remove_keyboard}
+             */
+            remove_keyboard: boolean;
         }>;
     }): Promise<AnyObject>;
     getFile(fileId: string): Promise<ApiPhotoResponse>;
@@ -86,6 +95,13 @@ export declare class TelegramApi {
         allowed_updates: string[];
     }>): Promise<ApiUpdateResponse>;
     getLastUpdate(): Promise<ApiUpdateItem | null>;
+    answerCallbackQuery(data: {
+        callback_query_id: string;
+        text?: string;
+        show_alert?: boolean;
+        url?: string;
+        cache_time?: number;
+    }): Promise<AnyObject>;
     private request;
 }
 export {};
