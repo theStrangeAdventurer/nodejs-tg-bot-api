@@ -105,6 +105,20 @@ export type ApiUpdateItem = {
   callback_query?: ApiCallbackData;
 };
 
+export type ApiChatResponse = ApiResponse<{
+  id: number,
+  title: string;
+  type: string;
+  description: string;
+  invite_link: string;
+  photo: {
+    small_file_id: string;
+    small_file_unique_id: string;
+    big_file_id: string;
+    big_file_unique_id: string; 
+  }
+}>
+
 export type ApiUpdateResponse = ApiResponse<ApiUpdateItem[]>;
 
 export type ApiGetMeResponse = ApiResponse<{

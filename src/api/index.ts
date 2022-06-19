@@ -1,5 +1,5 @@
-import https from 'https';
-import { ApiPhotoResponse, ApiGetMeResponse, ApiUpdateResponse, ApiUpdateItem } from '../@types/api';
+import axios from 'axios';
+import { ApiPhotoResponse, ApiGetMeResponse, ApiUpdateResponse, ApiUpdateItem, ApiChatResponse } from '../@types/api';
 import { Button } from '../services';
 
 const API_HOST = 'https://api.telegram.org';
@@ -15,6 +15,19 @@ export class TelegramApi {
   constructor(private token: string, private timeout = TIMEOUT_MS) {
     this.basePrefix = `/bot${this.token}`;
     this.filePrefix = `/file/bot${this.token}`;
+  }
+
+  /**
+   * https://core.telegram.org/bots/api#getchat
+   * @param {string | number} chatId identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+   * @method {getChat}
+   */
+  public getChat(chatId: string | number) {
+    return this.request<ApiChatResponse>('/getChat', { chat_id: chatId })
+  }
+
+  public getChatMemberCount(chatId: string | number) {
+    return this.request('/getChatMemberCount', { chat_id: chatId })
   }
 
   /**
@@ -114,7 +127,7 @@ export class TelegramApi {
     return `${API_HOST}${this.filePrefix}/${filePath}`;
   }
 
-  public static getChatId(message: ApiUpdateItem) {
+  public static getSenderChatId(message: ApiUpdateItem) {
     if (message?.message) {
       return message.message.chat.id;
     }
@@ -148,61 +161,10 @@ export class TelegramApi {
     return this.request('/answerCallbackQuery', data)
   }
 
-  private request<T = AnyObject>(path: string, body = {} as AnyObject, useBasePrefix = true): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const prefix = useBasePrefix ? this.basePrefix : this.filePrefix;
-      const data = [] as Buffer[];
+  private async request<T = AnyObject>(path: string, body = {} as AnyObject, useBasePrefix = true): Promise<T> {
+    const prefix = useBasePrefix ? this.basePrefix : this.filePrefix;
       const url = `${API_HOST}${prefix}${path}`;
-      const postData = JSON.stringify(body);
-      
-      const req = https.request(
-        url,
-        {
-          timeout: this.timeout,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-        (res) => {
-          if (res.statusCode !== 200) {
-            req.destroy();
-            return reject(new Error(`Error: ${res.statusMessage}, code: ${res.statusCode}, \n ${url} \n ${JSON.stringify(body, null, 2)}`));
-          }
-
-          res
-            .on('data', (chunk: Buffer) => {
-              data.push(chunk);
-            })
-            .on('end', () => {
-              const stringData = data.join('').toString();
-              try {
-                const resultData = JSON.parse(stringData);
-                resolve(resultData);
-              } catch (error) {
-                reject(error);
-              } finally {
-                req.destroy();
-              }
-            });
-        },
-      );
-
-      const handleReject = (error) => {
-        req.destroy();
-        reject(error);
-      };
-
-      req.on('error', (err) => {
-        if ((err as unknown as AnyObject)?.code === 'ECONNRESET') {
-          return handleReject(new Error(`⏱ Timeout has expired: ${TIMEOUT_MS}ms.`));
-        }
-        handleReject(err);
-      });
-
-      req.write(postData);
-
-      req.end();
-    });
+      const response = await axios.post(url, body);
+      return response.data;
   }
 }

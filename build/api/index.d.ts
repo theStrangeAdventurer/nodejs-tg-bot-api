@@ -1,4 +1,4 @@
-import { ApiPhotoResponse, ApiGetMeResponse, ApiUpdateResponse, ApiUpdateItem } from '../@types/api';
+import { ApiPhotoResponse, ApiGetMeResponse, ApiUpdateResponse, ApiUpdateItem, ApiChatResponse } from '../@types/api';
 import { Button } from '../services';
 declare type AnyObject = Record<string, unknown>;
 export declare class TelegramApi {
@@ -7,6 +7,13 @@ export declare class TelegramApi {
     private basePrefix;
     private filePrefix;
     constructor(token: string, timeout?: number);
+    /**
+     * https://core.telegram.org/bots/api#getchat
+     * @param {string | number} chatId identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @method {getChat}
+     */
+    getChat(chatId: string | number): Promise<ApiChatResponse>;
+    getChatMemberCount(chatId: string | number): Promise<AnyObject>;
     /**
      * https://core.telegram.org/bots/api/#sendmessage
      * @method {sendMessage}
@@ -86,7 +93,7 @@ export declare class TelegramApi {
     }): Promise<AnyObject>;
     getFile(fileId: string): Promise<ApiPhotoResponse>;
     getFileSource(filePath: string): string;
-    static getChatId(message: ApiUpdateItem): number;
+    static getSenderChatId(message: ApiUpdateItem): number;
     getMe(): Promise<ApiGetMeResponse>;
     getUpdates(data?: Partial<{
         limit: number;

@@ -42,7 +42,7 @@ class Md {
         return result;
     }
     static url(url, text) {
-        if (!text) {
+        if (typeof text !== 'string') {
             text = url;
         }
         return `[${Md.prepare(text)}](${Md.prepare(url)})`;

@@ -38,7 +38,7 @@ const handleUpdates = async () => {
             console.log('Have not updates...');
             return process.exit(1);
         }
-        const replyChatId = api_1.TelegramApi.getChatId(lastUpdate);
+        const replyChatId = api_1.TelegramApi.getSenderChatId(lastUpdate);
         // // Send message with Buttons and callback data
         await api.sendMessage({
             chat_id: replyChatId,

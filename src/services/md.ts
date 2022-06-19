@@ -40,7 +40,7 @@ export class Md {
     return result;
   }
   static url(url: string, text?: string) {
-    if (!text) {
+    if (typeof text !== 'string') {
       text = url;
     }
     return `[${Md.prepare(text)}](${Md.prepare(url)})`;

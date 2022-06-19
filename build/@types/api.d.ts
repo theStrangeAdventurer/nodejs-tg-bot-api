@@ -90,6 +90,19 @@ export declare type ApiUpdateItem = {
     message?: ApiMessage;
     callback_query?: ApiCallbackData;
 };
+export declare type ApiChatResponse = ApiResponse<{
+    id: number;
+    title: string;
+    type: string;
+    description: string;
+    invite_link: string;
+    photo: {
+        small_file_id: string;
+        small_file_unique_id: string;
+        big_file_id: string;
+        big_file_unique_id: string;
+    };
+}>;
 export declare type ApiUpdateResponse = ApiResponse<ApiUpdateItem[]>;
 export declare type ApiGetMeResponse = ApiResponse<{
     id: number;

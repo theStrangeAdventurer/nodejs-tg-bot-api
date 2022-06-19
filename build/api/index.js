@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TelegramApi = void 0;
-const https_1 = __importDefault(require("https"));
+const axios_1 = __importDefault(require("axios"));
 const API_HOST = 'https://api.telegram.org';
 const TIMEOUT_MS = 30;
 const DEFAULT_PARSE_MODE = 'MarkdownV2';
@@ -14,6 +14,17 @@ class TelegramApi {
         this.timeout = timeout;
         this.basePrefix = `/bot${this.token}`;
         this.filePrefix = `/file/bot${this.token}`;
+    }
+    /**
+     * https://core.telegram.org/bots/api#getchat
+     * @param {string | number} chatId identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @method {getChat}
+     */
+    getChat(chatId) {
+        return this.request('/getChat', { chat_id: chatId });
+    }
+    getChatMemberCount(chatId) {
+        return this.request('/getChatMemberCount', { chat_id: chatId });
     }
     /**
      * https://core.telegram.org/bots/api/#sendmessage
@@ -32,7 +43,7 @@ class TelegramApi {
     getFileSource(filePath) {
         return `${API_HOST}${this.filePrefix}/${filePath}`;
     }
-    static getChatId(message) {
+    static getSenderChatId(message) {
         var _a, _b, _c;
         if (message === null || message === void 0 ? void 0 : message.message) {
             return message.message.chat.id;
@@ -57,54 +68,11 @@ class TelegramApi {
     async answerCallbackQuery(data) {
         return this.request('/answerCallbackQuery', data);
     }
-    request(path, body = {}, useBasePrefix = true) {
-        return new Promise((resolve, reject) => {
-            const prefix = useBasePrefix ? this.basePrefix : this.filePrefix;
-            const data = [];
-            const url = `${API_HOST}${prefix}${path}`;
-            const postData = JSON.stringify(body);
-            const req = https_1.default.request(url, {
-                timeout: this.timeout,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }, (res) => {
-                if (res.statusCode !== 200) {
-                    req.destroy();
-                    return reject(new Error(`Error: ${res.statusMessage}, code: ${res.statusCode}, \n ${url} \n ${JSON.stringify(body, null, 2)}`));
-                }
-                res
-                    .on('data', (chunk) => {
-                    data.push(chunk);
-                })
-                    .on('end', () => {
-                    const stringData = data.join('').toString();
-                    try {
-                        const resultData = JSON.parse(stringData);
-                        resolve(resultData);
-                    }
-                    catch (error) {
-                        reject(error);
-                    }
-                    finally {
-                        req.destroy();
-                    }
-                });
-            });
-            const handleReject = (error) => {
-                req.destroy();
-                reject(error);
-            };
-            req.on('error', (err) => {
-                if ((err === null || err === void 0 ? void 0 : err.code) === 'ECONNRESET') {
-                    return handleReject(new Error(`⏱ Timeout has expired: ${TIMEOUT_MS}ms.`));
-                }
-                handleReject(err);
-            });
-            req.write(postData);
-            req.end();
-        });
+    async request(path, body = {}, useBasePrefix = true) {
+        const prefix = useBasePrefix ? this.basePrefix : this.filePrefix;
+        const url = `${API_HOST}${prefix}${path}`;
+        const response = await axios_1.default.post(url, body);
+        return response.data;
     }
 }
 exports.TelegramApi = TelegramApi;

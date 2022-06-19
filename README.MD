@@ -1,7 +1,8 @@
 # 🤖 nodejs-tg-bot-api
 
+### ⚠️ Not all api methods are implemented now, I am adding them as they are applied on my project
 ### Features
- - Dependencies free
+ - One dependency (axios)
  - Some handy services for formatting text and send buttons
 
 ## Installation
@@ -27,7 +28,7 @@ const api = new TelegramApi('YOUR_TELEGRAM_BOT_TOKEN');
         }
 
         await api.sendMessage({
-            chat_id: lastUpdate.message?.chat.id,
+            chat_id: TelegramApi.getSenderChatId(lastUpdate),
             text: Md.lines(
                 Md.bold('Bold text'),
                 Md.url('https://ya.ru', 'Some text link'),
@@ -38,7 +39,7 @@ const api = new TelegramApi('YOUR_TELEGRAM_BOT_TOKEN');
         });
 
         await api.sendMessage({
-            chat_id: lastUpdate.message?.chat.id,
+            chat_id: TelegramApi.getSenderChatId(lastUpdate),
             text: 'Some text with buttons',
             reply_markup: {
                 inline_keyboard: [

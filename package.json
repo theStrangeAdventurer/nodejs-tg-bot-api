@@ -13,7 +13,7 @@
     "url": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api/issues"
   },
   "homepage": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Dependency free nodejs tools for using Telegram Bot Api",
   "main": "build/index.js",
   "scripts": {
@@ -41,5 +41,8 @@
     "hooks": {
       "pre-commit": "npm run lint"
     }
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }
