@@ -1,12 +1,11 @@
-import { ApiPhotoResponse, ApiGetMeResponse, ApiUpdateResponse, ApiUpdateItem, ApiChatResponse } from '../@types/api';
+import { ApiPhotoResponse, ApiGetMeResponse, ApiUpdateResponse, ApiUpdateItem, ApiChatResponse, ApiMessage, ApiLabeledPrice } from '../@types/api';
 import { Button } from '../services';
 declare type AnyObject = Record<string, unknown>;
 export declare class TelegramApi {
     private token;
-    private timeout;
     private basePrefix;
     private filePrefix;
-    constructor(token: string, timeout?: number);
+    constructor(token: string);
     /**
      * https://core.telegram.org/bots/api#getchat
      * @param {string | number} chatId identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
@@ -95,6 +94,118 @@ export declare class TelegramApi {
     getFileSource(filePath: string): string;
     static getSenderChatId(message: ApiUpdateItem): number;
     getMe(): Promise<ApiGetMeResponse>;
+    /**
+     * Use this method to send invoices. On success, the sent Message is returned.
+     * https://core.telegram.org/bots/api#sendinvoice
+     */
+    sendInvoice(data: {
+        /**
+         * Payment provider token, obtained via @BotFather
+         * @param {provider_token}
+         */
+        provider_token: string;
+        /**
+         * Unique identifier for the target chat
+         * or username of the target channel
+         * (in the format @channelusername)
+         * @param {number | string} chat_id
+         */
+        chat_id: number | string;
+        /**
+         * Bot-defined invoice payload,
+         * 1-128 bytes. This will not be displayed to the user,
+         * use for your internal processes.
+         * @param {string} payload
+         */
+        payload: string;
+        /**
+         * Product name, 1-32 characters
+         * @param {string} title
+         */
+        title: string;
+        /**
+         * Product description, 1-255 characters
+         * @param {string} description
+         */
+        description: string;
+        /**
+         * Price breakdown, a JSON-serialized list of components
+         * (
+         *   e.g. product price, tax, discount,
+         *   delivery cost, delivery tax, bonus, etc.
+         * )
+         * @param {ApiLabeledPrice[]} prices
+         */
+        prices: ApiLabeledPrice[];
+        /**
+         * Three-letter ISO 4217 currency code
+         * https://core.telegram.org/bots/payments#supported-currencies
+         * @param {string} currency
+         */
+        currency: 'RUB' | 'USD' | string;
+        /**
+         * The maximum accepted amount for tips in the smallest units
+         *  of the currency (integer, not float/double).
+         * For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145.
+         * See the exp parameter in currencies.json,
+         * it shows the number of digits past the decimal point for each currency
+         * (2 for the majority of currencies). Defaults to 0
+         * @param {number} max_tip_amount
+         */
+        max_tip_amount?: number;
+        /**
+         * A JSON-serialized array of suggested amounts of tips in the smallest units
+         * of the currency (integer, not float/double).
+         * At most 4 suggested tip amounts can be specified.
+         * The suggested tip amounts must be positive,
+         * passed in a strictly increased order
+         * and must not exceed max_tip_amount.
+         * @param {number[]} suggested_tip_amounts
+         */
+        suggested_tip_amounts?: number[];
+        /**
+         * JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
+         * @param {string} provider_data
+         */
+        provider_data?: string;
+        /**
+         * URL of the product photo for the invoice.
+         * Can be a photo of the goods or a marketing image for a service.
+         * People like it better when they see what they are paying for.
+         * @param {string} photo_url
+         */
+        photo_url?: string;
+        /**
+         * Additional optional data
+         * @param {any} optional
+         */
+        [optional: string]: any;
+    }): Promise<ApiMessage>;
+    /**
+     * Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned. Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
+     * https://core.telegram.org/bots/api#answerprecheckoutquery
+     */
+    answerPreCheckoutQuery(data: {
+        pre_checkout_query_id: string;
+        /**
+         * Specify True if everything is alright (goods are available, etc.)
+         * and the bot is ready to proceed with the order.
+         * Use False if there are any problems.
+         * @param {boolean} ok
+         */
+        ok: boolean;
+        /**
+         * Required if ok is False.
+         * Error message in human readable form that explains the reason
+         * for failure to proceed with the checkout
+         * (e.g. "Sorry, somebody just bought the last of our amazing black
+         * T-shirts while you were busy filling out your payment details.
+         * Please choose a different color or garment!").
+         * Telegram will display this message to the user.
+         * @param {string} error_message
+         */
+        error_message?: string;
+    }): Promise<boolean>;
     getUpdates(data?: Partial<{
         limit: number;
         offset: number;

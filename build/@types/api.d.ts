@@ -38,14 +38,47 @@ export declare type ApiPhotoItem = ApiFileCommon & {
     width: number;
     height: number;
 };
+export declare type ApiLabeledPrice = {
+    label: string;
+    amount: number;
+};
 export declare type ApiPhotoResponse = ApiResponse<ApiFileCommon & {
     file_path: string;
 }>;
 export declare type ApiJsonData = string;
+/**
+ * Shipping Address
+ * https://core.telegram.org/bots/api#shippingaddress
+ * @param {ApiShippingAddress}
+ */
+export declare type ApiShippingAddress = {
+    country_code: string;
+    state: string;
+    city: string;
+    street_line1: string;
+    street_line2: string;
+    post_code: string;
+};
+export declare type ApiOrderInfo = Partial<{
+    name: string;
+    phone_number: string;
+    email: string;
+    shipping_address: ApiShippingAddress;
+}>;
+export declare type ApiPreCheckoutQuery = {
+    id: string;
+    from: ApiUser;
+    currency: string;
+    total_amount: number;
+    invoice_payload: string;
+    shipping_option_id: string;
+    order_info?: ApiOrderInfo;
+};
 export declare type ApiCallbackData = {
     id: string;
     from: ApiUser;
     message: ApiMessage;
+    pre_checkout_query?: ApiPreCheckoutQuery;
     /**
      * Global identifier, uniquely corresponding to the chat
      * to which the message with the callback button was sent.
@@ -67,6 +100,19 @@ export declare type ApiLocationData = {
     latitude: number;
     longitude: number;
 };
+/**
+ * Successful Payment object
+ * https://core.telegram.org/bots/api#successfulpayment
+ * @param {ApiSuccessfulPayment}
+ */
+export declare type ApiSuccessfulPayment = {
+    currency: string;
+    total_amount: number;
+    invoice_payload: string;
+    shipping_option_id: string;
+    telegram_payment_charge_id: string;
+    provider_payment_charge_id: string;
+};
 export declare type ApiMessage = {
     message_id: number;
     date: number;
@@ -78,6 +124,7 @@ export declare type ApiMessage = {
     location?: ApiPhotoItem[];
     reply_to_message?: ApiMessage;
     text: string;
+    successful_payment?: ApiSuccessfulPayment;
 };
 export declare type ApiContact = {
     phone_number: string;

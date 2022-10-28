@@ -6,12 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TelegramApi = void 0;
 const axios_1 = __importDefault(require("axios"));
 const API_HOST = 'https://api.telegram.org';
-const TIMEOUT_MS = 30;
 const DEFAULT_PARSE_MODE = 'MarkdownV2';
 class TelegramApi {
-    constructor(token, timeout = TIMEOUT_MS) {
+    constructor(token) {
         this.token = token;
-        this.timeout = timeout;
         this.basePrefix = `/bot${this.token}`;
         this.filePrefix = `/file/bot${this.token}`;
     }
@@ -54,6 +52,20 @@ class TelegramApi {
     }
     getMe() {
         return this.request('/getMe');
+    }
+    /**
+     * Use this method to send invoices. On success, the sent Message is returned.
+     * https://core.telegram.org/bots/api#sendinvoice
+     */
+    sendInvoice(data) {
+        return this.request('/sendInvoice', data);
+    }
+    /**
+     * Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned. Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
+     * https://core.telegram.org/bots/api#answerprecheckoutquery
+     */
+    answerPreCheckoutQuery(data) {
+        return this.request('/answerPreCheckoutQuery', data);
     }
     // https://core.telegram.org/bots/api#getupdates
     getUpdates(data) {
