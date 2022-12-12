@@ -1,6 +1,6 @@
 export class Button {
-  static withCallback(text: string, data: Record<string, unknown>) {
-    return { text, callback_data: JSON.stringify(data) };
+  static withCallback(text: string, data: Record<string, unknown>, stringify = true) {
+    return { text, callback_data: stringify ? JSON.stringify(data) : data };
   }
 
   private static create(text: string, data: Partial<{ request_contact: boolean; request_location: boolean }>) {

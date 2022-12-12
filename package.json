@@ -13,7 +13,7 @@
     "url": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api/issues"
   },
   "homepage": "https://github.com/alexej3ajtsev/nodejs-tg-bot-api",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "description": "Nodejs tools for using Telegram Bot Api with only one peer dependency (axios)",
   "main": "build/index.js",
   "scripts": {
